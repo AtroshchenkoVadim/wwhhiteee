@@ -1,0 +1,32 @@
+import os
+
+def sort_files_by_extension(start_dir):
+    for root, dirs, files in os.walk(start_dir):
+        for file in files:
+            if file.startswith('.'):
+                continue
+
+            file_extension = os.path.splitext(file)[1].lstrip('.')
+
+            if not file_extension:
+                file_extension = "no_extension"
+
+            target_folder = os.path.join(start_dir, file_extension)
+            os.makedirs(target_folder, exist_ok=True)
+
+            source_path = os.path.join(root, file)
+            target_path = os.path.join(target_folder, file)
+
+            if os.path.exists(target_path):
+                base_name, ext = os.path.splitext(file)
+                counter = 1
+                while os.path.exists(target_path):
+                    new_name = f"{base_name}_{counter}{ext}"
+                    target_path = os.path.join(target_folder, new_name)
+                    counter += 1
+
+            os.rename(source_path, target_path)
+
+
+    start_directory = r"C:\Users\ekila\Desktop\ппапак"
+    sort_files_by_extension(start_directory)
