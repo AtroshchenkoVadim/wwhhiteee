@@ -1,0 +1,49 @@
+
+
+import random
+import time
+
+class Fighter:
+    
+    def __init__(self, name: str, health: float, damage: list[float], attack_speed: list[float]):
+        self.name = name
+        self.health = health
+        self.damage = damage
+        self.attack_speed = attack_speed
+
+    def take_damage(self):
+        damage_taken = random.uniform(self.damage[0], self.damage[1])
+        self.health -= damage_taken
+        return damage_taken
+
+def combat(fighter_one: Fighter, fighter_two: Fighter):
+    with open("logger.txt", "w") as log_file:
+        while fighter_one.health > 0 and fighter_two.health > 0:
+            time.sleep(random.uniform(fighter_one.attack_speed[0], fighter_one.attack_speed[1]))
+            damage = fighter_one.take_damage()
+            log_file.write(f"{fighter_one.name} deals {damage:.2f} damage to {fighter_two.name}. {fighter_two.name} has {fighter_two.health:.2f} health left.\n")
+
+            if fighter_two.health <= 0:
+                break
+            
+            time.sleep(random.uniform(fighter_two.attack_speed[0], fighter_two.attack_speed[1]))
+            damage = fighter_two.take_damage()
+            log_file.write(f"{fighter_two.name} deals {damage:.2f} damage to {fighter_one.name}. {fighter_one.name} has {fighter_one.health:.2f} health left.\n")
+
+        if fighter_one.health > 0:
+            log_file.write(f"{fighter_one.name} has won the battle!\n")
+        else:
+            log_file.write(f"{fighter_two.name} has won the battle!\n")
+
+start_time = time.time()
+
+fighter1 = Fighter("Fighter 1", 100, [10, 20], [1, 2])
+fighter2 = Fighter("Fighter 2", 100, [10, 20], [1, 2])
+
+combat(fighter1, fighter2)
+
+end_time = time.time()
+execution_time = end_time - start_time
+
+with open("logger.txt", "a") as log_file:
+    log_file.write(f"The battle lasted {execution_time:.2f} seconds.\n")
